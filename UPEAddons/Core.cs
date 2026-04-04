@@ -12,18 +12,23 @@ namespace UPEAddons
     public class Core : MelonMod
     {
         AudioSource audio;
-        AudioClip jump_scare;
-        UnityEngine.GameObject jumpscare_sound_player;
+        AudioClip noise_clip;
+        public UnityEngine.GameObject jumpscare_game_object;
+        UnityEngine.AudioSource noise_audio_source;
 
         bool y_or_n; // rng check
 
         public override void OnInitializeMelon()
         {
             // initialize the jump scare audioclip
-            jumpscare_sound_player = new UnityEngine.GameObject();
-            jumpscare_sound_player.name = "jumpscare_sound_player";
-            jumpscare_sound_player.AddComponent<AudioSource>();
-            //jumpscare_sound_player = UnityEngine.GameObject.Find("Audio_Main");
+            jumpscare_game_object = new UnityEngine.GameObject();
+            jumpscare_game_object.name = "jumpscare_game_object";
+
+            jumpscare_game_object.AddComponent<AudioSource>();
+            noise_audio_source = jumpscare_game_object.GetComponent<AudioSource>();
+            noise_audio_source.clip = noise_clip;
+            
+            //noise_sound_player = UnityEngine.GameObject.Find("Audio_Main");
             //LoggerInstance.Msg(sound_file);
             //jump_scare = 
             //jump_scare.LoadAudioData();
@@ -35,7 +40,7 @@ namespace UPEAddons
         {
             base.OnUpdate();
             
-            // determine if we play jumpscare this frame
+            // determine if we play noise this frame
             if (CheckRng() == true)
             {
                 //audio.Play();
