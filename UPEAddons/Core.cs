@@ -5,6 +5,7 @@ using UnityEngine;
 using Il2CppView_Audio;
 using Il2CppMS.Internal.Xml.XPath;
 using Il2CppSystem.Net.Cache;
+using UnityEngine.ResourceManagement.ResourceProviders;
 
 [assembly: MelonInfo(typeof(UPEAddons.Core), "UPEAddons", "1.0.0", "RosePT-10", null)]
 [assembly: MelonGame("Videocult", "Airframe")]
@@ -17,7 +18,7 @@ namespace UPEAddons
         AudioClip noise_clip;
         public UnityEngine.GameObject jumpscare_game_object;
         UnityEngine.AudioSource noise_audio_source;
-        AssetBundle asset;
+        AssetBundle bundle;
 
         bool y_or_n; // rng check
         string path;
@@ -33,13 +34,27 @@ namespace UPEAddons
                 )
             );
             yield return createRequest;
-            AssetBundle bundle = createRequest.assetBundle;
+            bundle = createRequest.assetBundle;
 
         }
         public override void OnInitializeMelon()
         {
             // initialize asset bundle
-            LoadFromMemoryAsync("UPEAddons/jump_scare.assets");
+            //LoadFromMemoryAsync("D:/_AIRFRAME ULTRA/_Mods and tools/_RoseMods/UPEAddons/UPEAddons/jump_scare.assets");
+            bundle = AssetBundle.LoadFromFile("D:/_AIRFRAME ULTRA/_Mods and tools/_RoseMods/UPEAddons/UPEAddons/jump_scare.assets");
+            if (bundle == null)
+            {
+                LoggerInstance.Msg("Failed to load custom asset bundle :[");
+            }
+            else
+            {
+                LoggerInstance.Msg("Loaded custom asset bundle");
+            }
+            
+
+            // testing
+            //noise_clip = bundle.LoadAsset<AudioClip>("Poke");
+            //LoggerInstance.Msg(noise_clip.name);
 
             
             
@@ -73,6 +88,13 @@ namespace UPEAddons
             //jump_scare.LoadAudioData();
 
             LoggerInstance.Msg("Successfully Initialized! Yipee!");
+        }
+
+        public override void OnApplicationQuit()
+        {
+            base.OnApplicationQuit();
+            bundle.Unload(true);
+            LoggerInstance.Msg("Unloaded custom asset bundle");
         }
 
         public override void OnUpdate()
