@@ -6,6 +6,7 @@ using Il2CppView_Audio;
 using Il2CppMS.Internal.Xml.XPath;
 using Il2CppSystem.Net.Cache;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using Il2CppSystem.Linq;
 
 [assembly: MelonInfo(typeof(UPEAddons.Core), "UPEAddons", "1.0.0", "RosePT-10", null)]
 [assembly: MelonGame("Videocult", "Airframe")]
@@ -53,8 +54,7 @@ namespace UPEAddons
             
 
             // testing
-            //noise_clip = bundle.LoadAsset<AudioClip>("Poke");
-            //LoggerInstance.Msg(noise_clip.name);
+            
 
             
             
@@ -68,17 +68,24 @@ namespace UPEAddons
             //LoggerInstance.Msg(path_to_noise_clip);
 
             // get the .wav as an audioclip
-            //noise_clip = Resources.Load<AudioClip>("Poke");
-            //noise_clip.name = "noise_clip";
+            //noise_clip = bundle.LoadAsset<AudioClip>("Poke");
             //LoggerInstance.Msg(noise_clip.name);
             
             // initialize the jump scare audioclip
-            //jumpscare_game_object = new UnityEngine.GameObject();
-            //jumpscare_game_object.name = "jumpscare_game_object";
-
-            //jumpscare_game_object.AddComponent<AudioSource>();
-            //noise_audio_source = jumpscare_game_object.GetComponent<AudioSource>();
-            //noise_audio_source.clip = noise_clip;
+            jumpscare_game_object = bundle.LoadAsset<GameObject>("JumpScare");
+            LoggerInstance.Msg(jumpscare_game_object.name);
+            noise_audio_source = jumpscare_game_object.GetComponent<AudioSource>();
+            LoggerInstance.Msg(noise_audio_source.name);
+            //noise_audio_source.clip = bundle.LoadAsset<AudioClip>("Poke");
+            AudioClip test = jumpscare_game_object.GetComponent<AudioSource>().clip;
+            if (test == null)
+            {
+                LoggerInstance.Msg("didn't work :[");
+            }
+            else
+            {
+                LoggerInstance.Msg("worked!!!!!!");
+            }
             
             
             
@@ -90,13 +97,18 @@ namespace UPEAddons
             LoggerInstance.Msg("Successfully Initialized! Yipee!");
         }
 
-        public override void OnApplicationQuit()
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            base.OnApplicationQuit();
-            bundle.Unload(true);
-            LoggerInstance.Msg("Unloaded custom asset bundle");
+            base.OnSceneWasLoaded(buildIndex, sceneName);
+            if (sceneName == "MainMenu")
+            {
+                jumpscare_game_object = bundle.LoadAsset<GameObject>("JumpScare");
+                LoggerInstance.Msg(jumpscare_game_object.name);
+                GameObject.Instantiate(jumpscare_game_object);
+                LoggerInstance.Msg("survived");
+                jumpscare_game_object.GetComponent<AudioSource>().Play();
+            }
         }
-
         public override void OnUpdate()
         {
             base.OnUpdate();
@@ -118,6 +130,13 @@ namespace UPEAddons
             }
 
             return y_or_n;
+        }
+
+        public override void OnApplicationQuit()
+        {
+            base.OnApplicationQuit();
+            bundle.Unload(true);
+            LoggerInstance.Msg("Unloaded custom asset bundle");
         }
         
     }
