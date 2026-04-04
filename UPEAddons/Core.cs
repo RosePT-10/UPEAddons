@@ -3,6 +3,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using System;
 using UnityEngine;
 using Il2CppView_Audio;
+using Il2CppMS.Internal.Xml.XPath;
 
 [assembly: MelonInfo(typeof(UPEAddons.Core), "UPEAddons", "1.0.0", "RosePT-10", null)]
 [assembly: MelonGame("Videocult", "Airframe")]
@@ -17,9 +18,20 @@ namespace UPEAddons
         UnityEngine.AudioSource noise_audio_source;
 
         bool y_or_n; // rng check
+        string path;
+        string path_to_noise_clip;
 
         public override void OnInitializeMelon()
         {
+            // find where the .wav should be stored
+            path = Application.dataPath;
+            int dotdot = path.LastIndexOf('/');
+            path = path.Remove(dotdot, 19); // go back one folder
+            path = path.Insert(dotdot, "/UserData/UPEAddons/AudioClip"); 
+            LoggerInstance.Msg(path);
+            path_to_noise_clip = path + "/Poke.wav";
+            LoggerInstance.Msg(path_to_noise_clip);
+            
             // initialize the jump scare audioclip
             jumpscare_game_object = new UnityEngine.GameObject();
             jumpscare_game_object.name = "jumpscare_game_object";
