@@ -31,6 +31,9 @@ namespace UPEAddons
             LoggerInstance.Msg(path);
             path_to_noise_clip = path + "/Poke.wav";
             LoggerInstance.Msg(path_to_noise_clip);
+
+            // get the .wav as an audioclip
+            
             
             // initialize the jump scare audioclip
             jumpscare_game_object = new UnityEngine.GameObject();
