@@ -67,8 +67,8 @@ namespace UPEAddons
         {
             // initialize config file
             JumpScareCat = MelonPreferences.CreateCategory("FoxyJumpScareRNG");
-            Chance = JumpScareCat.CreateEntry<int>("JumpScareRarity", 10);
-            IsSilly = JumpScareCat.CreateEntry<bool>("GoofySoundEffect", true);
+            Chance = JumpScareCat.CreateEntry<int>("JumpScareRarity", 10000);
+            IsSilly = JumpScareCat.CreateEntry<bool>("GoofySoundEffect", false);
             
             
             // initialize asset bundle
