@@ -60,26 +60,36 @@ namespace UPEAddons
         }
         public override void OnInitializeMelon()
         {
+            bool got_asset;
             // initialize asset bundle
             path = Path.GetFullPath("jump_scare.assets").Replace('\\', '/');
             LoggerInstance.Msg(path);
-            bundle = AssetBundle.LoadFromFile("D:/_AIRFRAME ULTRA/_Mods and tools/_RoseMods/UPEAddons/UPEAddons/jump_scare.assets");
+            bundle = AssetBundle.LoadFromFile("./UserData/jump_scare.assets");
             if (bundle == null)
             {
                 LoggerInstance.Msg("Failed to load custom asset bundle :[");
+                got_asset = false;
             }
             else
             {
                 LoggerInstance.Msg("Loaded custom asset bundle");
+                got_asset = true;
             }
 
-            // initialize texture stuff
             
-
             // set timer
             timer = 0;
 
-            LoggerInstance.Msg("Successfully Initialized! Yipee!");
+            // log outcome
+            if (got_asset == true)
+            {
+                LoggerInstance.Msg("Successfully Initialized! Yipee!");
+            }
+            else
+            {
+                LoggerInstance.Msg("Oh no! The asset bundle failed to load and most of this mod will not work. Did you put the .assets in UserData?");
+            }
+            
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -95,8 +105,8 @@ namespace UPEAddons
                 //jumpscare_game_object.GetComponent<AudioSource>().Play();
                 
                 // play video
-                //MelonEvents.OnGUI.Subscribe(DrawAnimation, 0);
-                //is_animation_playing = true;
+                MelonEvents.OnGUI.Subscribe(DrawAnimation, 0);
+                is_animation_playing = true;
             }
         }
         
